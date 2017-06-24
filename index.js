@@ -14,14 +14,41 @@ async function cachedGet(url) {
         return await fs.readFile(filename, 'utf-8')
         // return await fs.readFile('page-cache/123' , 'utf-8');
     } catch (e) {
-        console.log('hey')
+        console.log('requesting ' + url + '...')
         let page = await request.get(url);
         await fs.writeFile(filename, page);
         return page;
     }
 }
 
+ const cheerio = require('cheerio');
 (async function() {
-    console.log(await cachedGet('http://www.redom.ru/afisha/all/'));
+    // console.log(await cachedGet('http://www.redom.ru/afisha/all/'));
+    let page = await cachedGet('http://www.redom.ru/afisha/all/');
+  
+    let $ = cheerio.load(page);
+
+   
+    let events = $('.schedule tr[event-id]').map(function(i, el) {
+	    let $el = $(el);
+	    return {
+		    title: $el.find('.schedule_name a').text().trim(),
+		    place: $el.find('.schedule_place a').text().trim(),
+		    place_url: $el.find('.schedule_place a').attr('href'),
+	    }
+    }).get();
+    //console.log(events);
+   
+    let urls = events.map(event => 'http://www.redom.ru' + event.place_url);
+    console.log(urls);
+   
+    let placePages = await Promise.all(urls.map(cachedGet));
+	let coords = placePages.map(function (page) {
+		
+	})
+	// latitude: 56.024642, longitude: 92.834363
+	
+	console.log(placePages.map(p => p.length))
 })()
+
 
