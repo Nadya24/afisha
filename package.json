@@ -9,6 +9,7 @@
   "author": "node",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "request": "^2.81.0"
+    "bluebird": "^3.5.0",
+    "request-promise": "^4.2.1"
   }
 }
