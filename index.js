@@ -44,11 +44,16 @@ async function cachedGet(url) {
    
     let placePages = await Promise.all(urls.map(cachedGet));
 	let coords = placePages.map(function (page) {
-		
+		let re = latitude
+		return {
+			
+			latitude:page.match(re),
+		//	longitude:page.match('');
+		}
 	})
 	// latitude: 56.024642, longitude: 92.834363
 	
-	console.log(placePages.map(p => p.length))
+	console.log(coords.map(p => p.latitude))
 })()
 
 
