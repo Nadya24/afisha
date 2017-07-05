@@ -21,7 +21,8 @@ async function cachedGet(url) {
     }
 }
 
- const cheerio = require('cheerio');
+const cheerio = require('cheerio');
+
 (async function() {
     // console.log(await cachedGet('http://www.redom.ru/afisha/all/'));
     let page = await cachedGet('http://www.redom.ru/afisha/all/');
@@ -44,16 +45,14 @@ async function cachedGet(url) {
    
     let placePages = await Promise.all(urls.map(cachedGet));
 	let coords = placePages.map(function (page) {
-		let re = latitude
+        let m = page.match(/latitude: ([\d.]+), longitude: ([\d.]+)/);
 		return {
-			
-			latitude:page.match(re),
-		//	longitude:page.match('');
+			latitude: parseFloat(m[1]),
+			longitude: parseFloat(m[2]),
 		}
 	})
-	// latitude: 56.024642, longitude: 92.834363
 	
-	console.log(coords.map(p => p.latitude))
+	console.log(coords)
 })()
 
 
