@@ -54,15 +54,10 @@ const cheerio = require('cheerio');
 
     let result = [];
     for (let i = 0; i < events.length; i++) {
-        result.push({
-            title: events[i].title,
-            place: events[i].place,
-            place_url: events[i].place_url,
-            latitude: coords[i].latitude,
-            longitude: coords[i].longitude,
-        });
+        result.push(
+            Object.assign({}, events[i], coords[i])
+        );
     }
-
     console.log(result);
 })()
 
