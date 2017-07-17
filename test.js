@@ -20,4 +20,22 @@ describe('utils', function() {
             assert.equal(utils.inarray(11, [2, 10, 5]), false);
         });
     });
+
+    describe('combine', function() {
+        it('should combine things', function() {
+            let res = utils.combine([
+                {title: 'a', place: 'Home', place_url: '/place/12/'},
+                {title: 'b', place: 'Home', place_url: '/place/12/'},
+                {title: 'c', place: 'Work', place_url: '/place/42/'},
+            ], ['/place/12/', '/place/42/'], [
+                {latitude: 42, longitude: 15},
+                {latitude: 43, longitude: 0},
+            ])
+            assert.deepEqual(res, [
+                {title: 'a', place: 'Home', place_url: '/place/12/', latitude: 42, longitude: 15},
+                {title: 'b', place: 'Home', place_url: '/place/12/', latitude: 42, longitude: 15},
+                {title: 'c', place: 'Work', place_url: '/place/42/', latitude: 43, longitude: 0},
+            ]);
+        });
+    });
 });

@@ -6,7 +6,8 @@ const fs = {
     writeFile: Promise.promisify(_fs.writeFile),
 }
 const querystring = require('querystring');
-
+const cheerio = require('cheerio');
+const utils = require('./utils');
 
 async function cachedGet(url) {
     let filename = 'page-cache/' + querystring.escape(url);
@@ -21,7 +22,7 @@ async function cachedGet(url) {
     }
 }
 
-const cheerio = require('cheerio');
+
 
 (async function() {
     // console.log(await cachedGet('http://www.redom.ru/afisha/all/'));
@@ -41,9 +42,10 @@ const cheerio = require('cheerio');
     console.log(events);
 
     let urls = events.map(event => 'http://www.redom.ru' + event.place_url);
+    let distinctUrls = utils.distinct(urls);
     // console.log(urls);
 
-    let placePages = await Promise.all(urls.map(cachedGet));
+    let placePages = await Promise.all(distinctUrls.map(cachedGet));
 	let coords = placePages.map(function (page) {
         let m = page.match(/latitude: ([\d.]+), longitude: ([\d.]+)/);
 		return {
